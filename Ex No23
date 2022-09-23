@@ -1,0 +1,47 @@
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.io.*;
+public class DatagramClient extends MIDlet implements CommandListener{
+public Form form1;
+public Display display;
+public TextField textfield;
+public Command sendCommand;
+public DatagramClient()
+{
+display=Display.getDisplay(this);
+form1=new Form("Datagram Client");
+sendCommand=new Command("send",Command.OK,1);
+textfield=new TextField("Enter Text",null,30,TextField.ANY);
+form1.append(textfield);
+form1.addCommand(sendCommand);
+form1.setCommandListener(this);
+}
+public void startApp() {
+display.setCurrent(form1);
+}
+Date Structures using C ++ B 2018-2019
+Date Structures using C ++ LAB 201
+public void pauseApp() {
+}
+public void destroyApp(boolean unconditional) {
+}
+public void commandAction(Command cmd,Displayable d)
+{
+if(cmd==sendCommand)
+{
+try {
+DatagramConnection dgc = (DatagramConnection)
+Connector.open("datagram://localhost:9001");
+try {
+while(true)
+{
+byte[] payload = textfield.getString().getBytes();
+Datagram datagram = dgc.newDatagram(payload, payload.length);
+dgc.send(datagram);
+}
+} finally {
+dgc.close();
+}
+} catch (Exception x) {
+x.printStackTrace();
+}}}}
