@@ -1,0 +1,72 @@
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.io.*;
+public class DatagramServer extends MIDlet implements CommandListener{
+public Form form1;
+public Form form2;
+public Command startCommand;
+public Command refreshCommand;
+public Command exitCommand;
+public Display display;
+public StringItem st;
+public DatagramServer()
+{
+display=Display.getDisplay(this);
+startCommand=new Command("Start",Command.OK,1);
+refreshCommand=new Command("Refresh",Command.OK,1);
+exitCommand=new Command("Exit",Command.EXIT,1);
+st=new StringItem(" "," ");
+form1 =new Form("DataGramserver");
+form2=new Form("Ready to receive Messages");
+form1.addCommand(startCommand);
+form1.setCommandListener(this);
+form2.addCommand(refreshCommand);
+form2.addCommand(exitCommand);
+form2.setCommandListener(this);
+}
+public void startApp() {
+display.setCurrent(form1);
+}
+public void pauseApp() {
+}
+public void destroyApp(boolean unconditional) {
+}
+public void commandAction(Command cmd,Displayable displayable)
+{
+if(displayable==form1)
+{
+if(cmd==startCommand)
+{
+try {
+DatagramConnection dgc = (DatagramConnection)
+Connector.open("datagram://:9001");
+try {
+int size = 100;
+Datagram datagram = dgc.newDatagram(size);
+dgc.receive(datagram);
+form2.append(datagram.getData().toString());
+} finally {
+dgc.close();
+}
+} catch (Exception x){
+x.printStackTrace();
+}
+Date Structures using C ++ B 2018-2019
+Date Structures using C ++ LAB 201
+
+display.setCurrent(form2);
+}
+}
+else if(displayable==form2)
+{
+if(cmd==exitCommand)
+{
+notifyDestroyed();
+}
+else if(cmd==refreshCommand)
+{
+st.setText(" ");
+}
+}
+}
+}
