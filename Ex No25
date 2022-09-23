@@ -1,0 +1,72 @@
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.io.*;
+import java.io.*;
+public class login extends MIDlet implements CommandListener {
+public Form form1;
+public Command okCommand;
+public Display display;
+public HttpConnection ht=null;
+public InputStream ist=null;
+public StringItem st;
+public TextField t1;
+public TextField t2;
+public Alert alert;
+public Form form2;
+public login()
+{
+display=Display.getDisplay(this);
+st=new StringItem(" "," Welcome");
+alert =new Alert(" ","Wrong UserName or Password",null,AlertType.INFO);
+t1=new TextField("UserName"," ",30,TextField.ANY);
+t2=new TextField("Password"," ",30,TextField.PASSWORD);
+form1=new Form("Login Here");
+form2=new Form("Welcome");
+okCommand=new Command("Login",Command.OK,1);
+form1.addCommand(okCommand);
+form1.setCommandListener(this);
+form1.append(t1);
+form1.append(t2);
+form2.append(st);
+}
+public void startApp() {
+display.setCurrent(form1);
+}
+public void pauseApp() {
+}
+public void destroyApp(boolean unconditional) {
+notifyDestroyed(); 
+}
+public void commandActi on(Command cmd,Displayable d)
+{
+if(cmd==okCommand)
+{
+Date Structures using C ++ B 2018-2019
+Date Structures using C ++ LAB 201
+try
+{
+// String url="http://192.168.5.19:8080/WebApplication7/index.jsp?t1=101&t2=aaa";
+String
+url="http://192.168.5.19:8080/WebApplication7/index.jsp?t1="+t1.getString().trim()+"&t2="+t2.getString().trim();
+//ht=(HttpConnection)Connector.open("http://192.168.5.19:8080/WebApplication7/index.jsp");
+ht=(HttpConnection)Connector.open(url);
+ist=ht.openInputStream();
+byte[] b=new byte[900];
+ist.read(b);
+String s=new String(b);
+s=s.trim();
+if(s.equals("ok"))
+display.setCurrent(form2);
+else
+{
+alert.setTimeout(Alert.FOREVER);
+display.setCurrent(alert);
+}
+}
+catch(Exception ex)
+{
+form1.append(ex.toString());
+}
+}
+}
+}
